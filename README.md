@@ -1,0 +1,2 @@
+# auto-aqua
+This System was built using ESP32 Microcontroller with inbuilt wifi module for controlling the whole system, Moisture Sensor and Ultrasonic Sensor for reading data, a relay and pump as actuators. The pump is switched on or off based on the readings of the moisture level sensor. The ultrasonic sensor is used for monitoring the water level in the container. The data is also sent to cloud database and displayed in the front end webpage using REST APIs based HTTP communication protocols.
