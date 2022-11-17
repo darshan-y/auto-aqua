@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DashBoard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.1.3/axios.min.js" integrity="sha512-0qU9M9jfqPw6FKkPafM3gy2CBAvUWnYVOfNPDYKVuRTel1PrciTj+a9P3loJB+j0QmN2Y0JYQmkBBS8W+mbezg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <nav>
+        <ul>
+            <li><a href="DashBoard.html">DashBoard</a></li>
+            <li><a href="About.html">About</a></li>
+            <li><a href="Feedback.html">Feedback</a></li>
+        </ul>
+    </nav>
+    <h1><span id="auto">auto</span><span id="aqua">Aqua</span></h1>
+    <img src="plant.png" alt="plant">
+    <div class="moisture">
+        <p id="moistureValue"></p>
+        <h4>Moisture</h4>
+    </div>
+    <div class="waterLevel">
+        <p id="WaterLevelValue"></p>
+        <h4>Water Level</h4>
+    </div>
+
+    <footer>
+        <p>cdb @ 2022 Copyright, All Right Reserved </p>
+    </footer>
+    <script>
+    let reqOptions = {
+        url: "https://plant-api-iot.herokuapp.com/getData",
+        method: "GET",
+    }
+
+    function setData(data) {
+        const moisture = data.moisture
+        const level = Math.round(((18 - data.waterLevel)/18)*100) + "%"
+        const moistureContainer = document.getElementById("moistureValue");
+        const levelContainer = document.getElementById("WaterLevelValue");
+        let moistureVal;
+        if(moisture > 400) {
+            moistureVal = "LOW";
+            moistureContainer.classList.add("low")
+            moistureContainer.classList.remove("medium")
+            moistureContainer.classList.remove("high")
+        } else if(moisture > 300) {
+            moistureVal = "MEDIUM"
+            moistureContainer.classList.remove("low")
+            moistureContainer.classList.add("medium")
+            moistureContainer.classList.remove("high")
+        } else {
+            moistureVal = "HIGH"
+            moistureContainer.classList.remove("low")
+            moistureContainer.classList.remove("medium")
+            moistureContainer.classList.add("high")
+        }
+
+        moistureContainer.innerHTML = moistureVal;
+        levelContainer.innerHTML = level;
+    }
+
+    axios.request(reqOptions)
+        .then(res => setData(res.data))
+        .catch(err => console.log(err))
+
+
+    setInterval(() => {
+        axios.request(reqOptions)
+            .then(res => setData(res.data))
+            .catch(err => console.log(err))
+    }, 5000)
+    
+    </script>
+</body>
+</html>
